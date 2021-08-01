@@ -18,6 +18,7 @@ TO DO:
     - map the network for hosts that respond to ping
     - modify get functions to take interface name as a parameter, or default if no parameter
     - multithread pings (divide range into equal parts and append once sweep is done)
+    - add wait time speficication
 """
 
 up = []
@@ -25,9 +26,9 @@ up = []
 # function to send one ICMP ping to a given hostname
 def myping(hostname, platform):
     if platform.lower()=='linux':
-        response = os.system("ping -c 1 " + hostname)
+        response = os.system("ping -c 1 -w 2 " + hostname)
     elif platform.lower()=='windows':
-        response = os.system("ping -n 1 " + hostname)
+        response = os.system("ping -n 1 -w 2" + hostname)
     return response
 
 # function returns host ip, netmask, and gateway
@@ -103,8 +104,13 @@ def getslash():
 
 netinf = getnetworkinfo()
 platform = platform.system()
+scanrange = []
 for host in ipaddress.IPv4Network(netinf['network']+'/'+netinf['/']):
-    if myping(str(host),platform) == 0:
-        up.append(host)
+    scanrange.append(str(host))
 
+"""
+for host in scanrange:
+    if myping(hostname, platform) == 0:
+        up.append(host)
 print(up)
+"""
