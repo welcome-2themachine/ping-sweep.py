@@ -5,7 +5,7 @@
 # Created Date: Fri, 30 July 2021 @ 2159
 # Author: welcome-2themachine
 
-import os, ipaddress, platform
+import os, ipaddress, platform, threading
 # install dependencies - eventually this will be a requirements.txt
 try:
     import netifaces
@@ -102,6 +102,12 @@ def getslash():
             break
     return str(slash)
 
+def thread_task(ip_list):
+    for i in ip_list:
+        if myping(i)==0:
+            up.append(i)
+
+up_lock = threading.Lock()
 netinf = getnetworkinfo()
 platform = platform.system()
 scanrange = []
