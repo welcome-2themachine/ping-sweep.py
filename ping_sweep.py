@@ -5,7 +5,7 @@
 # Created Date: Fri, 30 July 2021 @ 2159
 # Author: welcome-2themachine
 
-import os, ipaddress
+import os, ipaddress, platform
 # install dependencies - eventually this will be a requirements.txt
 try:
     import netifaces
@@ -16,17 +16,18 @@ except:
 """
 TO DO:
     - map the network for hosts that respond to ping
-    - store info for each host in some kind of dictionary to store: hostname, ip, nmap scan results
     - modify get functions to take interface name as a parameter, or default if no parameter
-    - detect the os to make sure the ping command works (there will be a different version for windows)
     - multithread pings (divide range into equal parts and append once sweep is done)
 """
 
 up = []
 
 # function to send one ICMP ping to a given hostname
-def myping(hostname):
-    response = os.system("ping -c 1 " + hostname)
+def myping(hostname, platform):
+    if platform.lower()=='linux':
+        response = os.system("ping -c 1 " + hostname)
+    elif platform.lower()=='windows':
+        response = os.system("ping -n 1 " + hostname)
     return response
 
 # function returns host ip, netmask, and gateway
@@ -101,8 +102,9 @@ def getslash():
     return str(slash)
 
 netinf = getnetworkinfo()
+platform = platform.system()
 for host in ipaddress.IPv4Network(netinf['network']+'/'+netinf['/']):
-    if myping(str(host)) == 0:
+    if myping(str(host),platform) == 0:
         up.append(host)
 
 print(up)
