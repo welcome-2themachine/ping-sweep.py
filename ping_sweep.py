@@ -24,10 +24,10 @@ TO DO:
 up = []
 
 # function to send one ICMP ping to a given hostname
-def myping(hostname, platform):
-    if platform.lower()=='linux':
+def myping(hostname):
+    if getplatform()=='linux':
         response = os.system("ping -c 1 -w 2 " + hostname)
-    elif platform.lower()=='windows':
+    elif getplatform()=='windows':
         response = os.system("ping -n 1 -w 2" + hostname)
     return response
 
@@ -102,6 +102,9 @@ def getslash():
             break
     return str(slash)
 
+def getplatform():
+    return platform.system().lower()
+
 def thread_task(ip_list):
     for i in ip_list:
         if myping(i)==0:
@@ -109,7 +112,6 @@ def thread_task(ip_list):
 
 up_lock = threading.Lock()
 netinf = getnetworkinfo()
-platform = platform.system()
 scanrange = []
 for host in ipaddress.IPv4Network(netinf['network']+'/'+netinf['/']):
     scanrange.append(str(host))
