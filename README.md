@@ -2,8 +2,11 @@
     `python3 ping_sweep.py`
 
 **What it does:**
+
     - automatically detects your default network
+    
     - detects network size, and total number of IPs in the network
+
     - sends one ping to each ip in the address space
 
 **Roadmap:**
