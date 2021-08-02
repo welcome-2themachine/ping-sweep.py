@@ -10,6 +10,7 @@
     - sends one ping to each ip in the address space
 
 **Roadmap:**
+
     - implement runtime args:
         help
         interface selection
@@ -20,5 +21,6 @@
     - make it pretty
 
 **Dependencies (as of 1AUG21):**
+
     - python3
     - python libraries: os, ipaddress, platform, threading, netifaces
