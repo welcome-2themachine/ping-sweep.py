@@ -15,3 +15,7 @@ Roadmap:
     - multithread (to increase performace)
     - allow interface selection
     - make it pretty
+
+Dependencies (as of 1AUG21):
+    - python3
+    - python libraries: os, ipaddress, platform, threading, netifaces
