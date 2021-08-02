@@ -1,5 +1,5 @@
 **To Run ping_sweep.py:**
-    'python3 ping_sweep.py'
+    `python3 ping_sweep.py`
 
 **What it does:**
     - automatically detects your default network
