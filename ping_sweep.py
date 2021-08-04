@@ -32,34 +32,31 @@ def myping(hostname):
     return response
 
 # function returns host ip, netmask, and gateway
-def getnetworkinfo():
+def getnetworkinfo(interface):
     info = {'ip': "0.0.0.0", 'netmask': "0.0.0.0", 'network': "0.0.0.0", 'broadcast': "0.0.0.0", 'gateway': "0.0.0.0", '/': "0"}
-    info['ip']=gethostip()
-    info['netmask']=getnetmask()
-    info['network']=getnetworkip()
-    info['broadcast']=getbroadcast()
-    info['gateway']=getgateway()
-    info['/']=getslash()
+    info['ip']=gethostip(interface)
+    info['netmask']=getnetmask(interface)
+    info['network']=getnetworkip(interface)
+    info['broadcast']=getbroadcast(interface)
+    info['gateway']=getgateway(interface)
+    info['/']=getslash(interface)
     return info
 
 # function that gets the host ip
-def gethostip():
-    hostip = netifaces.ifaddresses(getdefaultinterface())[netifaces.AF_INET][0]['addr']
+def gethostip(interface):
+    hostip = netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['addr']
     return hostip
 
 # function that gets the netmask
-def getnetmask():
-    netmask = netifaces.ifaddresses(getdefaultinterface())[netifaces.AF_INET][0]['netmask']
+def getnetmask(interface):
+    netmask = netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['netmask']
     return netmask
 
 # function that gets the network ip
-def getnetworkip():
+def getnetworkip(interface):
     network_ip_list=["0","0","0","0"]
-    ip = gethostip()
-    netmask = getnetmask()
-
-    ip_list = ip.split(".")
-    netmask_list = netmask.split(".")
+    ip = gethostip(interface)
+    netmask = getnetmask(interface)
 
     for i in range(len(netmask.split("."))):
         if int(netmask.split(".")[i])==255:
@@ -76,19 +73,22 @@ def getdefaultinterface():
     return iface
 
 # function that gets the broadcase address
-def getbroadcast():
-    broadcast = netifaces.ifaddresses(getdefaultinterface())[netifaces.AF_INET][0]['broadcast']
+def getbroadcast(interface):
+    broadcast = netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['broadcast']
     return broadcast
 
-# function that gets the default gateway ip
-def getgateway():
-    gateway = netifaces.gateways()['default'][netifaces.AF_INET][0]
+# function that gets the default gateway ip - no gateway is 0.0.0.0
+def getgateway(interface):
+    try:
+        gateway = netifaces.gateways()[interface][netifaces.AF_INET][0]
+    except:
+        gateway = "0.0.0.0"
     return gateway
 
 # funtion that determines the slash size of the network (192.168.0.1/24)
-def getslash():
+def getslash(interface):
     slash = 32
-    netmask = getnetmask()
+    netmask = getnetmask(interface)
     for i in netmask.split("."):
         if i == "0":
             break
@@ -110,9 +110,50 @@ def thread_task(ip_list):
         if myping(i)==0:
             up.append(i)
 
+def printmenu():
+    print("Select interface to scan (ENTER for default): ")
+    for i in range(len(netifaces.interfaces())):
+        if getdefaultinterface() == netifaces.interfaces()[i]:
+            print(str(i) + ") "+netifaces.interfaces()[i]+" *default*")
+        else:
+            print(str(i) + ") " + netifaces.interfaces()[i])
+
+def testuserinput(input):
+    if input.isdigit(): 
+        if 0 <= int(input) < len(netifaces.interfaces()):
+            return True
+    elif input in netifaces.interfaces():
+        return True
+    else:
+        return False
+
+def pick_interface():
+    #testing the user's input
+    good_input=False
+    selection=""
+    while good_input is False:
+        printmenu()
+        selection = input(": ")
+        if testuserinput(selection):
+            good_input = True
+        else:
+            print("Please select an interface using the name or number of the interface")
+    if selection.isdigit():
+        return netifaces.interfaces()[int(selection)]
+    elif selection in netifaces.interfaces():
+        return selection
+    elif selection == "": 
+        return getdefaultinterface()
+    else:
+        return selection
+
+interface = pick_interface()
+print(interface)
+netinf = getnetworkinfo(interface)
+
 up_lock = threading.Lock()
-netinf = getnetworkinfo()
 scanrange = []
+
 for host in ipaddress.IPv4Network(netinf['network']+'/'+netinf['/']):
     scanrange.append(str(host))
 
