@@ -95,9 +95,11 @@ def getslash(interface):
             break
     return str(slash)
 
+#ensures the correct ping command is used by detecting the type of OS being run
 def getplatform():
     return platform.system().lower()
 
+# prints the menu the user selects the interface from
 def printmenu():
     print("Select interface to scan (ENTER for default): ")
     for i in range(len(netifaces.interfaces())):
@@ -106,6 +108,7 @@ def printmenu():
         else:
             print(str(i) + ") " + netifaces.interfaces()[i])
 
+# ensures the user picks a valid interface
 def testuserinput(input):
     if input.isdigit(): 
         if 0 <= int(input) < len(netifaces.interfaces()):
@@ -115,6 +118,7 @@ def testuserinput(input):
     else:
         return False
 
+# allows user to select interface with number key or interface name
 def pick_interface():
     #testing the user's input
     good_input=False
