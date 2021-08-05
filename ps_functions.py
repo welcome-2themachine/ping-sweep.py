@@ -5,7 +5,7 @@
 # Created Date: Tue, 3 Aug 2021 @ 2223
 # Author: welcome-2themachine
 
-import os, platform
+import os, platform, ipaddress
 
 try:
     import netifaces
@@ -98,11 +98,6 @@ def getslash(interface):
 def getplatform():
     return platform.system().lower()
 
-def thread_task(ip_list):
-    for i in ip_list:
-        if myping(i)==0:
-            up.append(i)
-
 def printmenu():
     print("Select interface to scan (ENTER for default): ")
     for i in range(len(netifaces.interfaces())):
@@ -139,3 +134,10 @@ def pick_interface():
         return getdefaultinterface()
     else:
         return selection
+
+# builds the target range to scan
+def buildtargetrange(netinf):
+    scanrange=[]
+    for host in ipaddress.IPv4Network(netinf['network']+'/'+netinf['/']):
+        scanrange.append(str(host))
+    return scanrange

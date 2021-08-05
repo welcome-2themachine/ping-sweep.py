@@ -5,7 +5,7 @@
 # Created Date: Fri, 30 July 2021 @ 2159
 # Author: welcome-2themachine
 
-import ipaddress, threading
+import threading
 from ps_functions import *
 # install dependencies - eventually this will be a requirements.txt
 
@@ -26,18 +26,17 @@ print(interface)
 netinf = getnetworkinfo(interface)
 
 up_lock = threading.Lock()
-scanrange = []
 print(netinf)
 
+# this function is a "to do" for multithreading - more to follow
 def thread_task(ip_list):
     for i in ip_list:
         if myping(i)==0:
             up.append(i)
 
-for host in ipaddress.IPv4Network(netinf['network']+'/'+netinf['/']):
-    scanrange.append(str(host))
+targets=buildtargetrange(netinf)
+print(targets)
 
-print(scanrange)
 """
 for host in scanrange:
     if myping(hostname, platform) == 0:
