@@ -5,6 +5,8 @@
 
     - automatically detects your default network
     
+    - allows you to select interface
+    
     - detects network size, and total number of IPs in the network
 
     - sends one ping to each ip in the address space
@@ -13,7 +15,6 @@
 
     - implement runtime args:
         help
-        interface selection
         ping wait times
         ip scan range
     - multithread (to increase performace)
