@@ -5,7 +5,7 @@
 # Created Date: Fri, 30 July 2021 @ 2159
 # Author: welcome-2themachine
 
-import threading
+import argparse, threading
 from ps_functions import *
 # install dependencies - eventually this will be a requirements.txt
 
@@ -18,8 +18,15 @@ TO DO:
     - add wait time speficication
 """
 
-up = []
+parser=argparse.ArgumentParser(
+    description='''Ping_Sweep.py allows you to ping every ip in the network connected to a given interface. Use carefully.''',
+    epilog= """Again, use carefully."""
+)
+parser.add_argument('--interface', type=str, default=getdefaultinterface(), help='Select the interface you\'d like to be ping\'d')
+parser.add_argument("--wait", type=int, default=2, help='Select wait time for pings')
+args=parser.parse_args()
 
+up = []
 
 interface = pick_interface()
 print(interface)
