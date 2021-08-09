@@ -26,7 +26,7 @@ if args.interface == "empty":
     interface = pick_interface()
 else:
     interface = args.interface
-
+wait = args.wait
 netinf = getnetworkinfo(interface)
 targets = buildtargetrange(netinf)
 print(interface)
@@ -37,7 +37,7 @@ up_lock = threading.Lock()
 # this function is a "to do" for multithreading - more to follow
 def thread_task(ip_list):
     for i in ip_list:
-        if myping(i)==0:
+        if myping(i, wait)==0:
             up.append(i)
 
 """

@@ -13,7 +13,7 @@ except:
     import pip
     pip.main(['install', '-U', 'netifaces'])
     
-# function sets up arguments parser for help text, etc
+# function sets up arguments parser for help text, etc. So far, inputs are interface and wait
 def setup_parser():
     parser=argparse.ArgumentParser(
     description='''ping_sweep.py allows you to ping every ip in the network connected to a given interface. Use carefully.''',
@@ -23,12 +23,12 @@ def setup_parser():
     parser.add_argument("--wait", type=int, default=2, help='Select wait time for pings')
     return parser
 
-# function to send one ICMP ping to a given hostname
-def myping(hostname):
+# function to send one ICMP ping to a given hostname, and wait the given wait time
+def myping(hostname, wait):
     if getplatform()=='linux':
-        response = os.system("ping -c 1 -w 2 " + hostname)
+        response = os.system("ping -c 1 -w " + wait + " " + hostname)
     elif getplatform()=='windows':
-        response = os.system("ping -n 1 -w 2" + hostname)
+        response = os.system("ping -n 1 -w " + wait + " " + hostname)
     return response
 
 # function returns host ip, netmask, and gateway
