@@ -2,10 +2,11 @@
 
 # File: ping_sweep.py
 # Project: Net_Map
-# Created Date: Tue, 3 Aug 2021 @ 2223
+# Created Date: Tue, 3 Aug 2021 @ 2223 HST
 # Author: welcome-2themachine
 
-import os, platform, ipaddress
+import os, platform, ipaddress, argparse, random
+from ps_welcome_art import sweeps
 
 try:
     import netifaces
@@ -13,13 +14,29 @@ except:
     import pip
     pip.main(['install', '-U', 'netifaces'])
     
+# function sets up arguments parser for help text, etc. So far, inputs are interface and wait
+def setup_parser():
+    parser=argparse.ArgumentParser(
+    description='''ping_sweep.py allows you to ping every ip in the network connected to a given interface. Use carefully.''',
+    epilog= """Again, use carefully."""
+    )
+    parser.add_argument('--interface', type=str, default="empty", help='Select the interface you\'d like to be ping\'d')
+    parser.add_argument("--wait", type=int, default=2, help='Select wait time for pings')
+    return parser
 
-# function to send one ICMP ping to a given hostname
-def myping(hostname):
+def print_welcome():
+    print("\n")
+    swept = random.choice(sweeps)
+    for i in swept:
+        print(i)
+    print("\n")
+
+# function to send one ICMP ping to a given hostname, and wait the given wait time
+def myping(hostname, wait):
     if getplatform()=='linux':
-        response = os.system("ping -c 1 -w 2 " + hostname)
+        response = os.system("ping -c 1 -w " + wait + " " + hostname)
     elif getplatform()=='windows':
-        response = os.system("ping -n 1 -w 2" + hostname)
+        response = os.system("ping -n 1 -w " + wait + " " + hostname)
     return response
 
 # function returns host ip, netmask, and gateway
