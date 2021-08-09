@@ -2,10 +2,11 @@
 
 # File: ping_sweep.py
 # Project: Net_Map
-# Created Date: Tue, 3 Aug 2021 @ 2223
+# Created Date: Tue, 3 Aug 2021 @ 2223 HST
 # Author: welcome-2themachine
 
-import os, platform, ipaddress, argparse
+import os, platform, ipaddress, argparse, random
+from ps_welcome_art import sweeps
 
 try:
     import netifaces
@@ -22,6 +23,13 @@ def setup_parser():
     parser.add_argument('--interface', type=str, default="empty", help='Select the interface you\'d like to be ping\'d')
     parser.add_argument("--wait", type=int, default=2, help='Select wait time for pings')
     return parser
+
+def print_welcome():
+    print("\n")
+    swept = random.choice(sweeps)
+    for i in swept:
+        print(i)
+    print("\n")
 
 # function to send one ICMP ping to a given hostname, and wait the given wait time
 def myping(hostname, wait):
