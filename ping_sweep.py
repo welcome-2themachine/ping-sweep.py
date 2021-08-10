@@ -2,12 +2,8 @@
 
 # File: ping_sweep.py
 # Project: Net_Map
-# Created Date: Fri, 30 July 2021 @ 2159 HST
+# Created Date: Fri, 30 July 2021 @ 2159 EST
 # Author: welcome-2themachine
-
-import threading
-from ps_functions import *
-# install dependencies - eventually this will be a requirements.txt
 
 """
 TO DO:
@@ -17,13 +13,19 @@ TO DO:
     - add wait time speficication
     - add wait time speficication
 """
+
+import threading
+from ps_functions import *
+# install dependencies - eventually this will be a requirements.txt
+
 # setup the argument parsing
 args=setup_parser().parse_args()
 """
     To get to the parsed arguments: grab args.interface, args.wait (they will be the defaults unless the user changes them)
 """
+# print the welcome message
 print_welcome()
-up = []
+# check for user args
 if args.interface == "empty":
     interface = pick_interface()
 else:
@@ -33,15 +35,15 @@ netinf = getnetworkinfo(interface)
 targets = buildtargetrange(netinf)
 print(interface)
 print(netinf)
-
+# setup thread pool
+up = []
 up_lock = threading.Lock()
-
-# this function is a "to do" for multithreading - more to follow
+""" this function is a "to do" for multithreading - more to follow
 def thread_task(ip_list):
     for i in ip_list:
         if myping(i, wait)==0:
             up.append(i)
-
+"""
 """
 for host in scanrange:
     if myping(hostname, platform) == 0:
