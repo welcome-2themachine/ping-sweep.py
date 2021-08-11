@@ -17,11 +17,11 @@ except:
 # function sets up arguments parser for help text, etc. So far, inputs are interface and wait
 def setup_parser():
     parser=argparse.ArgumentParser(
-    description='''ping_sweep.py allows you to ping every ip in the network connected to a given interface. Use carefully.''',
-    epilog= """Again, use carefully."""
+    description="""ping_sweep.py sends one ICMP ping to each address attached to a given interface. Use carefully.""",
+    epilog= """Have fun!"""
     )
-    parser.add_argument('--interface', type=str, default="empty", help='Select the interface you\'d like to be ping\'d')
-    parser.add_argument("--wait", type=int, default=2, help='Select wait time for pings')
+    parser.add_argument("--interface", type=str, default="empty", help="Select the interface, usage: --interface eth0")
+    parser.add_argument("--wait", type=int, default=2, help="Select wait time per 4ping, usage: -- interface 5")
     return parser
 
 def print_welcome():
@@ -76,6 +76,9 @@ def getnetworkip(interface):
     return network_ip
 
 # function that finds the default network interface
+"""
+TO DO: add a try / catch in case there's no default interface (ex: no internet connection)
+"""
 def getdefaultinterface():
     iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
     return iface
