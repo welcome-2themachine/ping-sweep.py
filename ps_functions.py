@@ -115,9 +115,26 @@ def getslash(interface):
             break
     return str(slash)
 
-#ensures the correct ping command is used by detecting the type of OS being run
+# ensures the correct ping command is used by detecting the type of OS being run
 def getplatform():
     return platform.system().lower()
+
+# converts the guides put out by netinterfaces.interaces() on windows to readable names
+def guid_to_name_windows():
+    guids=netifaces.interaces()
+    import winreg
+    iface_names = ['(unknown)' for i in range(len(guids))]
+    reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+    reg_key = winreg.OpenKey(reg. r'SYSTEM\CurrentControlSet\Control\Network\{4d36e972-e325-11ce-bfc1-08002be10318}')
+    # I have no idea what this key corresponds to - but it worked for me
+    for i in range(len(guids)):
+        try:
+            reg_subkey=winreg.OpenKey(reg_key=winreg.OpenKey(reg_key, guids[i]))
+            iface_names[i]=
+    """
+    https://stackoverflow.com/questions/29913516/how-to-get-meaningful-network-interface-names-instead-of-guids-with-netifaces-un
+    """
+
 
 # prints the menu the user selects the interface from
 def printmenu():
