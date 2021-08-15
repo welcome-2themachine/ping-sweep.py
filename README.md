@@ -8,12 +8,6 @@
 **What it does:**
 
     - automatically detects your default network
-<<<<<<< HEAD
-    
-    - allows you to select interface
-    
-=======
->>>>>>> release
     - detects network size, and total number of IPs in the network
     - sends one ping to each ip in the address space
     - new features
@@ -26,11 +20,6 @@
 **Roadmap:**
 
     - implement runtime args:
-<<<<<<< HEAD
-        help
-        ping wait times
-=======
->>>>>>> dev
         ip scan range
     - multithread (to increase performace)
     - make it pretty
