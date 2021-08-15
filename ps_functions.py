@@ -115,18 +115,41 @@ def getslash(interface):
             break
     return str(slash)
 
-#ensures the correct ping command is used by detecting the type of OS being run
+# ensures the correct ping command is used by detecting the type of OS being run
 def getplatform():
     return platform.system().lower()
+
+# converts the guides put out by netinterfaces.interaces() on windows to readable names
+def guid_to_name_windows(guid):
+    import winreg
+    iface_name = '(unknown)'
+    reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+    reg_key = winreg.OpenKey(reg, r'SYSTEM\CurrentControlSet\Control\Network\{4d36e972-e325-11ce-bfc1-08002be10318}')
+    # I have no idea what this key corresponds to - but it worked for me
+    try:
+        reg_subkey=winreg.OpenKey(reg_key=winreg.OpenKey(reg_key, guid))
+        iface_name=winreg.QueryValueEx(reg_subkey, 'Name')[0]
+    except FileNotFoundError:
+            pass
+    return iface_name
+    """
+    https://stackoverflow.com/questions/29913516/how-to-get-meaningful-network-interface-names-instead-of-guids-with-netifaces-un
+    """
 
 # prints the menu the user selects the interface from
 def printmenu():
     print("Select interface to scan (ENTER for default): ")
     for i in range(len(netifaces.interfaces())):
-        if getdefaultinterface() == netifaces.interfaces()[i]:
-            print(str(i) + ") "+netifaces.interfaces()[i]+" *default*")
-        else:
-            print(str(i) + ") " + netifaces.interfaces()[i])
+        if getplatform()=='windows': #windows
+            if getdefaultinterface == netifaces.interfaces()[i]:
+                print(str(i) + ") "+guid_to_name_windows(netifaces.interfaces()[i])+" *default*")
+            else: 
+                print(str(i) + ")"+guid_to_name_windows(netifaces.interfaces()[i]))
+        else: #linux
+            if getdefaultinterface() == netifaces.interfaces()[i]:
+                print(str(i) + ") "+netifaces.interfaces()[i]+" *default*")
+            else:
+                print(str(i) + ") " + netifaces.interfaces()[i])
 
 # ensures the user picks a valid interface
 def testuserinput(input):
