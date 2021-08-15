@@ -10,19 +10,21 @@
     - automatically detects your default network
     - detects network size, and total number of IPs in the network
     - sends one ping to each ip in the address space
+    - new features
+        - allows the user to select interface
+        - displays the correct network name on windows systems
+        - cool ascii art
+        - a help menu
+        - command line args to select interfaces and adjust wait time
 
 **Roadmap:**
 
     - implement runtime args:
-        help
-        interface selection
-        ping wait times
         ip scan range
     - multithread (to increase performace)
-    - allow interface selection
     - make it pretty
 
-**Dependencies (as of 1AUG21):**
+**Dependencies (as of 14AUG21):**
 
     - python3
-    - python libraries: os, ipaddress, platform, threading, netifaces
+    - python libraries: os, ipaddress, platform, threading, netifaces, winreg
