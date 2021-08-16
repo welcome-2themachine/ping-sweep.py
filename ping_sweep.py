@@ -8,21 +8,17 @@
 """
 TO DO:
     - map the network for hosts that respond to ping
-    - modify get functions to take interface name as a parameter, or default if no parameter
     - multithread pings (divide range into equal parts and append once sweep is done)
-    - add wait time speficication
-    - add wait time speficication
 """
 
-import threading
+import concurrent.futures
 from ps_functions import *
-# install dependencies - eventually this will be a requirements.txt
 
 # setup the argument parsing
-args=setup_parser().parse_args()
 """
     To get to the parsed arguments: grab args.interface, args.wait (they will be the defaults unless the user changes them)
 """
+args=setup_parser().parse_args()
 # print the welcome message
 print_welcome()
 # check for user args
@@ -33,20 +29,17 @@ else:
 wait = args.wait
 netinf = getnetworkinfo(interface)
 targets = buildtargetrange(netinf)
-print(interface)
-print(netinf)
 # setup thread pool
 up = []
-up_lock = threading.Lock()
-""" this function is a "to do" for multithreading - more to follow
-def thread_task(ip_list):
-    for i in ip_list:
-        if myping(i, wait)==0:
-            up.append(i)
-"""
-"""
-for host in scanrange:
-    if myping(hostname, platform) == 0:
-        up.append(host)
+print(targets)
+print(netinf)
+def worker(host_ip):
+    response = myping(host_ip, wait, interface)
+    if response == 0:
+        up.append(host_ip)
+
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    futures = []
+    for host in targets:
+        futures.append(executor.submit(worker, host_ip=host))
 print(up)
-"""

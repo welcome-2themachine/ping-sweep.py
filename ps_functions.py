@@ -21,10 +21,11 @@ def setup_parser():
     epilog= """Have fun!"""
     )
     parser.add_argument("--interface", type=str, default="empty", help="Select the interface, usage: --interface eth0")
-    parser.add_argument("--wait", type=int, default=2, help="Select wait time per 4ping, usage: -- interface 5")
+    parser.add_argument("--wait", type=str, default="2", help="Select wait time per 4ping, usage: -- interface 5")
     return parser
 
 def print_welcome():
+    print("ping_sweep.py version 1.0 - 14 August 2021")
     print("\n")
     swept = random.choice(sweeps)
     for i in swept:
@@ -32,16 +33,19 @@ def print_welcome():
     print("\n")
 
 # function to send one ICMP ping to a given hostname, and wait the given wait time
-def myping(hostname, wait):
-    if getplatform()=='linux':
-        response = os.system("ping -c 1 -w " + wait + " " + hostname)
+def myping(hostname, wait, interface):
+    if getplatform()=="linux":
+        print(hostname + " ")
+        response = os.system('ping -c 2 -q -W 2 -I ' + interface + " " + hostname + " > /dev/null 2>&1")
+        print(hostname + " " + response)
     elif getplatform()=='windows':
         response = os.system("ping -n 1 -w " + wait + " " + hostname)
     return response
 
 # function returns host ip, netmask, and gateway
 def getnetworkinfo(interface):
-    info = {'ip': "0.0.0.0", 'netmask': "0.0.0.0", 'network': "0.0.0.0", 'broadcast': "0.0.0.0", 'gateway': "0.0.0.0", '/': "0"}
+    info = {'name':"(unknown)",'ip': "0.0.0.0", 'netmask': "0.0.0.0", 'network': "0.0.0.0", 'broadcast': "0.0.0.0", 'gateway': "0.0.0.0", '/': "0"}
+    info['name']=interface
     info['ip']=gethostip(interface)
     info['netmask']=getnetmask(interface)
     info['network']=getnetworkip(interface)
@@ -76,12 +80,12 @@ def getnetworkip(interface):
     return network_ip
 
 # function that finds the default network interface
-"""
-TO DO: add a try / catch in case there's no default interface (ex: no internet connection)
-"""
 def getdefaultinterface():
-    iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
-    return iface
+    try:
+        iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        return iface
+    except:
+        return netifaces.interfaces()[0]
 
 # function that gets the broadcase address
 def getbroadcast(interface):
